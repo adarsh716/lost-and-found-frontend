@@ -3,7 +3,7 @@ import { AppBar, Toolbar, Typography, IconButton, Menu, MenuItem} from '@mui/mat
 import { AccountCircle, Message, People, Settings, ExitToApp } from '@mui/icons-material';
 
 
-const Navbar = () => {
+const Navbar = ({ onViewChange }) => {
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleProfileMenuOpen = (event) => {
@@ -12,6 +12,11 @@ const Navbar = () => {
 
   const handleMenuClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleMenuItemClick = (view) => {
+    onViewChange(view);
+    handleMenuClose();
   };
 
   return (
@@ -77,27 +82,27 @@ const Navbar = () => {
             },
           }}
         >
-          <MenuItem onClick={handleMenuClose}>
+          <MenuItem onClick={() => handleMenuItemClick('communityChat')}>
             <Message sx={{ marginRight: 1 }} />
             Community Chat
           </MenuItem>
-          <MenuItem onClick={handleMenuClose}>
+          <MenuItem onClick={() => handleMenuItemClick('privateChat')}>
             <Message sx={{ marginRight: 1 }} />
             Private Chat
           </MenuItem>
-          <MenuItem onClick={handleMenuClose}>
+          <MenuItem onClick={() => handleMenuItemClick('profile')}>
             <AccountCircle sx={{ marginRight: 1 }} />
             Profile
           </MenuItem>
-          <MenuItem onClick={handleMenuClose}>
+          <MenuItem onClick={() => handleMenuItemClick('messageRequest')}>
             <Message sx={{ marginRight: 1 }} />
             Message Request
           </MenuItem>
-          <MenuItem onClick={handleMenuClose}>
+          <MenuItem onClick={() => handleMenuItemClick('friends')}>
             <People sx={{ marginRight: 1 }} />
             Friends
           </MenuItem>
-          <MenuItem onClick={handleMenuClose}>
+          <MenuItem onClick={() => handleMenuItemClick('settings')}>
             <Settings sx={{ marginRight: 1 }} />
             Settings
           </MenuItem>

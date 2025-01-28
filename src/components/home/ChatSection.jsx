@@ -20,6 +20,7 @@ import CloseIcon from '@mui/icons-material/Close';
 
 const CommunityChat = () => {
     const [message, setMessage] = useState('');
+    const [searchQuery, setSearchQuery] = useState('');
     const fileInputRef = useRef(null);
     const [selectedImage, setSelectedImage] = useState(null);
     const [currentUser] = useState({ fullName: 'Alice Smith', avatar: 'AS' });
@@ -48,9 +49,12 @@ const CommunityChat = () => {
         },
     ]);
 
+    const filteredMessages = messages.filter(msg =>
+        msg.text?.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
     useEffect(() => {
         return () => {
-            // Revoke object URLs to avoid memory leaks
             messages.forEach(msg => {
                 if (msg.image) URL.revokeObjectURL(msg.image);
             });
@@ -91,7 +95,7 @@ const CommunityChat = () => {
                 isCurrentUser: true
             };
             setMessages([...messages, newMessage]);
-            e.target.value = null; // Clear file input
+            e.target.value = null;
         }
     };
 
@@ -109,14 +113,12 @@ const CommunityChat = () => {
         color: iscurrentuser ? '#fff' : '#000',
         borderRadius: iscurrentuser ? '20px 4px 20px 20px' : '4px 20px 20px 20px',
         boxShadow: iscurrentuser
-            ? '0 4px 20px rgba(0, 0, 0, 0.3), 0 0 20px rgba(255, 255, 255, 0.4), 0 0 10px rgba(255, 255, 255, 0.3)' // subtle glow
-            : '0 4px 20px rgba(0, 0, 0, 0.1), 0 0 15px rgba(0, 0, 0, 0.15)', // slight glow for non-current users
+            ? '0 4px 20px rgba(0, 0, 0, 0.3), 0 0 20px rgba(255, 255, 255, 0.4), 0 0 10px rgba(255, 255, 255, 0.3)'
+            : '0 4px 20px rgba(0, 0, 0, 0.1), 0 0 15px rgba(0, 0, 0, 0.15)',
         transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
         position: 'relative',
         cursor: 'pointer',
     }));
-
-
 
     return (
         <Container maxWidth={false} sx={{
@@ -126,18 +128,51 @@ const CommunityChat = () => {
             p: 0,
             bgcolor: 'background.default'
         }}>
-            <Box sx={{
-                p: 2,
-                bgcolor: 'background.paper',
-                display: 'flex',
-                alignItems: 'center',
-                borderBottom: '1px solid #ddd'
-            }}>
-                <ForumIcon sx={{ mr: 1, color: 'text.primary' }} />
-                <Typography variant="h6" sx={{ fontWeight: 600, color: 'text.primary' }}>
-                    Community Chat
-                </Typography>
+            <Box
+                sx={{
+                    p: 2,
+                    bgcolor: 'background.paper',
+                    display: 'flex',
+                    flexDirection: { xs: 'column', sm: 'row' },
+                    alignItems: { xs: 'flex-start', sm: 'center' },
+                    justifyContent: { sm: 'space-between' },
+                    borderBottom: '1px solid #ddd',
+                }}
+            >
+                <Box sx={{ display: 'flex', alignItems: 'center', mb: { xs: 1, sm: 0 } }}>
+                    <ForumIcon sx={{ mr: 1, color: 'text.primary' }} />
+                    <Typography variant="h6" sx={{ fontWeight: 600, color: 'text.primary' }}>
+                        Community Chat
+                    </Typography>
+                </Box>
+
+                <TextField
+                    variant="outlined"
+                    placeholder="Search messages..."
+                    size="small"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    sx={{
+                        width: { xs: '50%', sm: '240px' },
+                        alignSelf: { xs: 'flex-end', sm: 'center' },
+                        '& .MuiOutlinedInput-root': {
+                            borderRadius: '20px',
+                            backgroundColor: 'background.paper',
+                            '& fieldset': {
+                                borderColor: 'rgba(0, 0, 0, 0.23)',
+                            },
+                            '&:hover fieldset': {
+                                borderColor: 'rgba(0, 0, 0, 0.5)',
+                            },
+                            '&.Mui-focused fieldset': {
+                                borderColor: 'primary.main',
+                                borderWidth: '1px',
+                            },
+                        },
+                    }}
+                />
             </Box>
+
 
             <List sx={{
                 flexGrow: 1,
@@ -154,7 +189,7 @@ const CommunityChat = () => {
                     </Typography>
                 </Box>
 
-                {messages.map((msg) => (
+                {filteredMessages.map((msg) => (
                     <StyledMessage key={msg.id} iscurrentuser={msg.isCurrentUser ? 1 : 0}>
                         <MessageBubble iscurrentuser={msg.isCurrentUser ? 1 : 0}>
                             {!msg.isCurrentUser && (
@@ -193,6 +228,7 @@ const CommunityChat = () => {
                     </StyledMessage>
                 ))}
             </List>
+
             <Backdrop
                 sx={{
                     zIndex: 1300,
