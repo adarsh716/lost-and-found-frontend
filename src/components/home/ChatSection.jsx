@@ -49,9 +49,10 @@ const CommunityChat = () => {
         },
     ]);
 
-    const filteredMessages = messages.filter(msg =>
-        msg.text?.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    const filteredMessages = messages.filter(msg => {
+        const matchesSearch = msg.text?.toLowerCase().includes(searchQuery.toLowerCase());
+        return searchQuery ? matchesSearch : true;
+    });
 
     useEffect(() => {
         return () => {
@@ -72,13 +73,13 @@ const CommunityChat = () => {
     const handleSendMessage = () => {
         if (message.trim()) {
             const newMessage = {
-                id: messages.length + 1,
+                id: Date.now(), // Better ID generation
                 user: currentUser.fullName,
                 text: message,
                 timestamp: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
                 isCurrentUser: true
             };
-            setMessages([...messages, newMessage]);
+            setMessages(prev => [...prev, newMessage]);
             setMessage('');
         }
     };
@@ -88,13 +89,13 @@ const CommunityChat = () => {
         if (file) {
             const imageUrl = URL.createObjectURL(file);
             const newMessage = {
-                id: messages.length + 1,
+                id: Date.now(), // Better ID generation
                 user: currentUser.fullName,
                 image: imageUrl,
                 timestamp: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
                 isCurrentUser: true
             };
-            setMessages([...messages, newMessage]);
+            setMessages(prev => [...prev, newMessage]);
             e.target.value = null;
         }
     };
