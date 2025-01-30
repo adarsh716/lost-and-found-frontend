@@ -4,9 +4,9 @@ import Navbar from './Navbar';
 import CommunityChat from '../chat/ChatSection';
 import PrivateChat from '../chat/PrivateChat';
 import ProfilePage from '../profile/index';         
-// import MessageRequest from './MessageRequest'; // Create these components
-// import Friends from './Friends';         // Create these components
-// import Settings from './Settings';       // Create these components
+import MessageRequestsPage from '../friendRequest/index';
+import FriendListPage from '../friendList/index';
+import SettingsPage from '../settings/index';
 
 const HomePage = () => {
   const [currentView, setCurrentView] = useState('communityChat');
@@ -24,11 +24,11 @@ const HomePage = () => {
       case 'profile':
         return <ProfilePage/>;
       case 'messageRequest':
-        return ;
+        return <MessageRequestsPage/>;
       case 'friends':
-        return ;
+        return <FriendListPage/>;
       case 'settings':
-        return ;
+        return <SettingsPage/>;
       default:
         return <CommunityChat />;
     }
@@ -53,7 +53,8 @@ const HomePage = () => {
           flexDirection: 'column',
           overflow: 'hidden', 
           position: 'relative',
-          m:0
+          m:0,
+          overflow:'auto'
         }}
       >
         <Box sx={{ 

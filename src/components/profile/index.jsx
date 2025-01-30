@@ -55,7 +55,6 @@ const CommunityProfile = () => {
               Community Connect
             </Typography>
             
-            {/* Friends Count & Stats */}
             <Box sx={{ 
               width: '100%', 
               p: 2, 
