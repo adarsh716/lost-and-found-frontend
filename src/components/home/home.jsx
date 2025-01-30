@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Box, CssBaseline, Container } from '@mui/material';
 import Navbar from './Navbar';
-import CommunityChat from './ChatSection';
-import PrivateChat from './PrivateChat';
-// import Profile from './Profile';         // Create these components
+import CommunityChat from '../chat/ChatSection';
+import PrivateChat from '../chat/PrivateChat';
+import ProfilePage from '../profile/index';         
 // import MessageRequest from './MessageRequest'; // Create these components
 // import Friends from './Friends';         // Create these components
 // import Settings from './Settings';       // Create these components
@@ -22,7 +22,7 @@ const HomePage = () => {
       case 'privateChat':
         return <PrivateChat /> ;
       case 'profile':
-        return ;
+        return <ProfilePage/>;
       case 'messageRequest':
         return ;
       case 'friends':
@@ -41,7 +41,6 @@ const HomePage = () => {
       backgroundColor: 'white',
       minHeight: '100vh',
       height: '100vh', 
-      overflow: 'hidden' 
     }}>
       <CssBaseline />
 

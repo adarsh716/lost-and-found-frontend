@@ -17,8 +17,9 @@ import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import ForumIcon from '@mui/icons-material/Forum';
 import { styled } from '@mui/material/styles';
 import CloseIcon from '@mui/icons-material/Close';
+import { AccountCircle } from '@mui/icons-material';
 
-const CommunityChat = () => {
+const PrivateChat = () => {
     const [message, setMessage] = useState('');
     const [searchQuery, setSearchQuery] = useState('');
     const fileInputRef = useRef(null);
@@ -28,14 +29,14 @@ const CommunityChat = () => {
     const [messages, setMessages] = useState([
         {
             id: 1,
-            user: 'System Bot',
+            user: 'Adarsh',
             text: 'Anybody affected by coronavirus?',
             timestamp: 'MAR 13:34',
             isCurrentUser: false
         },
         {
             id: 2,
-            user: 'John Doe',
+            user: 'Adarsh',
             text: 'At our office 3 ppl are infected. We work from home.',
             timestamp: 'MAR 13:35',
             isCurrentUser: false
@@ -73,7 +74,7 @@ const CommunityChat = () => {
     const handleSendMessage = () => {
         if (message.trim()) {
             const newMessage = {
-                id: Date.now(), // Better ID generation
+                id: Date.now(), 
                 user: currentUser.fullName,
                 text: message,
                 timestamp: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
@@ -89,7 +90,7 @@ const CommunityChat = () => {
         if (file) {
             const imageUrl = URL.createObjectURL(file);
             const newMessage = {
-                id: Date.now(), // Better ID generation
+                id: Date.now(), 
                 user: currentUser.fullName,
                 image: imageUrl,
                 timestamp: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
@@ -129,25 +130,23 @@ const CommunityChat = () => {
             p: 0,
             bgcolor: 'background.default'
         }}>
-            <Box
-                sx={{
-                    p: 2,
-                    bgcolor: 'background.paper',
-                    display: 'flex',
-                    flexDirection: { xs: 'column', sm: 'row' },
-                    alignItems: { xs: 'flex-start', sm: 'center' },
-                    justifyContent: { sm: 'space-between' },
-                    borderBottom: '1px solid #ddd',
-                }}
-            >
+            <Box sx={{
+                p: 2,
+                bgcolor: 'background.paper',
+                display: 'flex',
+                flexDirection: { xs: 'column', sm: 'row' },
+                alignItems: { xs: 'flex-start', sm: 'center' },
+                justifyContent: { sm: 'space-between' },
+                borderBottom: '1px solid #ddd',
+            }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', mb: { xs: 1, sm: 0 } }}>
-                    <ForumIcon sx={{ mr: 1, color: 'text.primary' }} />
+                    <AccountCircle sx={{ mr: 1, color: 'text.primary',height:30,width:30 }} />
                     <Typography variant="h6" sx={{ fontWeight: 600, color: 'text.primary' }}>
-                        Community Chat
+                        Adarsh Lakhanpal
                     </Typography>
                 </Box>
 
-                <TextField
+                {/* <TextField
                     variant="outlined"
                     placeholder="Search messages..."
                     size="small"
@@ -171,14 +170,12 @@ const CommunityChat = () => {
                             },
                         },
                     }}
-                />
+                /> */}
             </Box>
-
 
             <List sx={{
                 flexGrow: 1,
                 overflowY: 'auto',
-                overflowX: 'none',
                 bgcolor: 'background.default',
                 '&::-webkit-scrollbar': { width: '6px' },
                 '&::-webkit-scrollbar-track': { background: '#f0f0f0' },
@@ -214,66 +211,10 @@ const CommunityChat = () => {
                                     onClick={() => handleImageClick(msg.image)}
                                 />
                             )}
-                            <Typography
-                                variant="caption"
-                                sx={{
-                                    display: 'block',
-                                    textAlign: 'right',
-                                    mt: 0.5,
-                                    color: msg.isCurrentUser ? 'rgba(255,255,255,0.7)' : 'text.secondary'
-                                }}
-                            >
-                                {msg.timestamp}
-                            </Typography>
                         </MessageBubble>
                     </StyledMessage>
                 ))}
             </List>
-
-            <Backdrop
-                sx={{
-                    zIndex: 1300,
-                    background: 'rgba(0, 0, 0, 0.9)',
-                    backdropFilter: 'blur(8px)'
-                }}
-                open={!!selectedImage}
-                onClick={handleCloseImage}
-            >
-                <Fade in={!!selectedImage} timeout={300}>
-                    <Box sx={{
-                        position: 'relative',
-                        maxWidth: '90vw',
-                        maxHeight: '90vh',
-                        animation: 'scaleUp 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
-                    }}>
-                        <IconButton
-                            sx={{
-                                position: 'absolute',
-                                top: 16,
-                                right: 16,
-                                color: 'white',
-                                background: 'rgba(0, 0, 0, 0.5)',
-                                '&:hover': {
-                                    background: 'rgba(255, 255, 255, 0.2)'
-                                }
-                            }}
-                            onClick={handleCloseImage}
-                        >
-                            <CloseIcon />
-                        </IconButton>
-                        <img
-                            src={selectedImage}
-                            alt="Fullscreen content"
-                            style={{
-                                maxWidth: '100%',
-                                maxHeight: '90vh',
-                                borderRadius: '8px',
-                                boxShadow: '0 8px 32px rgba(0, 0, 0, 0.5)'
-                            }}
-                        />
-                    </Box>
-                </Fade>
-            </Backdrop>
 
             <Box sx={{
                 p: 2,
@@ -348,6 +289,51 @@ const CommunityChat = () => {
                     </IconButton>
                 </Box>
             </Box>
+            <Backdrop
+                sx={{
+                    zIndex: 1300,
+                    background: 'rgba(0, 0, 0, 0.9)',
+                    backdropFilter: 'blur(8px)'
+                }}
+                open={!!selectedImage}
+                onClick={handleCloseImage}
+            >
+                <Fade in={!!selectedImage} timeout={300}>
+                    <Box sx={{
+                        position: 'relative',
+                        maxWidth: '90vw',
+                        maxHeight: '90vh',
+                        animation: 'scaleUp 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+                    }}>
+                        <IconButton
+                            sx={{
+                                position: 'absolute',
+                                top: 16,
+                                right: 16,
+                                color: 'white',
+                                background: 'rgba(0, 0, 0, 0.5)',
+                                '&:hover': {
+                                    background: 'rgba(255, 255, 255, 0.2)'
+                                }
+                            }}
+                            onClick={handleCloseImage}
+                        >
+                            <CloseIcon />
+                        </IconButton>
+                        <img
+                            src={selectedImage}
+                            alt="Fullscreen content"
+                            style={{
+                                maxWidth: '100%',
+                                maxHeight: '90vh',
+                                borderRadius: '8px',
+                                boxShadow: '0 8px 32px rgba(0, 0, 0, 0.5)'
+                            }}
+                        />
+                    </Box>
+                </Fade>
+            </Backdrop>
+
             <style jsx global>{`
         @keyframes scaleUp {
           from {
@@ -364,4 +350,4 @@ const CommunityChat = () => {
     );
 };
 
-export default CommunityChat;
+export default PrivateChat;
