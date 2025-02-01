@@ -29,7 +29,6 @@ const SettingsPage = () => {
         Account Settings
       </Typography>
 
-      {/* Account Information */}
       <Box sx={{ mb: 4 }}>
         <Typography variant="h6" sx={{ mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
           <AccountCircle fontSize="medium" /> Profile Information
@@ -63,7 +62,6 @@ const SettingsPage = () => {
 
       <Divider sx={{ my: 3 }} />
 
-      {/* Security */}
       <Box sx={{ mb: 4 }}>
         <Typography variant="h6" sx={{ mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
           <Security fontSize="medium" /> Security
@@ -81,26 +79,16 @@ const SettingsPage = () => {
 
       <Divider sx={{ my: 3 }} />
 
-      {/* Notifications */}
       <Box sx={{ mb: 4 }}>
         <Typography variant="h6" sx={{ mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
-          {/* <Notifications fontSize="medium" /> Notifications */}
-          Notifications
+          Account
         </Typography>
         <List>
           <ListItem sx={{ py: 1.5, px: 0 }}>
             <ListItemIcon sx={{ minWidth: 36 }}>
-              <Email fontSize="small" />
+              <AccountCircle  fontSize="small" />
             </ListItemIcon>
-            <ListItemText primary="Email Notifications" secondary="Receive important updates via email" />
-            <Chip label="Enabled" color="success" size="small" />
-          </ListItem>
-          <ListItem sx={{ py: 1.5, px: 0 }}>
-            <ListItemIcon sx={{ minWidth: 36 }}>
-              <Sms fontSize="small" />
-            </ListItemIcon>
-            <ListItemText primary="SMS Notifications" secondary="Get SMS alerts for critical activities" />
-            <Chip label="Disabled" color="default" size="small" />
+            <ListItemText primary="Blocked Accounts"  />
           </ListItem>
         </List>
       </Box>
