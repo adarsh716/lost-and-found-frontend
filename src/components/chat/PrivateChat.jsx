@@ -33,6 +33,7 @@ const PrivateChat = () => {
         { id: 1, name: 'Adarsh Lakhanpal', avatar: 'A', online: true, lastMessage: 'At our office 3 ppl are infected...', timestamp: 'MAR 13:35' },
         { id: 2, name: 'John Doe', avatar: 'J', online: false, lastMessage: 'Hey, how are you?', timestamp: 'MAR 12:30' },
         { id: 3, name: 'Jane Smith', avatar: 'J', online: true, lastMessage: 'See you tomorrow!', timestamp: 'MAR 11:15' },
+
     ]);
 
     const [messages, setMessages] = useState({
@@ -131,7 +132,7 @@ const PrivateChat = () => {
 
     return (
         <Container maxWidth={false} sx={{
-            height: '100%',
+            height: '91.5ddvh',
             display: 'flex',
             p: 0,
             bgcolor: 'background.default'
@@ -207,6 +208,7 @@ const PrivateChat = () => {
             {/* Chat Area */}
             <Box sx={{
                 flexGrow: 1,
+                height:'91.5dvh',
                 display: { xs: selectedUser ? 'flex' : 'none', sm: 'flex' },
                 flexDirection: 'column',
             }}>

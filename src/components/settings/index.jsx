@@ -8,103 +8,234 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
-  Link,
-  Chip
+  IconButton
 } from '@mui/material';
 import {
   AccountCircle,
   Email,
-  Sms,
   Lock,
   HelpOutline,
   Security,
   Edit,
-  Password
+  Password,
+  ChevronRight,
+  Block
 } from '@mui/icons-material';
 
 const SettingsPage = () => {
   return (
-    <Container maxWidth="md" sx={{ py: 4, backgroundColor: 'background.paper', borderRadius: 2,overflow:'auto', '::-webkit-scrollbar': { display: 'none' } }}>
-      <Typography variant="h4" component="h1" gutterBottom sx={{ mb: 4, fontWeight: 600 }}>
+    <Container maxWidth="md" sx={{ 
+      py: 4, 
+      backgroundColor: 'background.paper', 
+      borderRadius: 0, 
+      boxShadow: 0,
+      mt: 2,
+      mb: 2,
+      overflow: 'auto',
+      '&::-webkit-scrollbar': { display: 'none' }
+    }}>
+      <Typography variant="h4" component="h1" gutterBottom sx={{ 
+        mb: 4, 
+        fontWeight: 700,
+        color: 'text.primary'
+      }}>
         Account Settings
       </Typography>
 
-      <Box sx={{ mb: 4 }}>
-        <Typography variant="h6" sx={{ mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
-          <AccountCircle fontSize="medium" /> Profile Information
-        </Typography>
-        <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
-          <ListItem sx={{ py: 1.5, px: 0 }}>
-            <ListItemIcon sx={{ minWidth: 36 }}>
-              <Edit fontSize="small" />
-            </ListItemIcon>
-            <ListItemText 
-              primary="Username" 
-              secondary="current_user123" 
-              secondaryTypographyProps={{ variant: 'body2' }}
-            />
-            <Chip label="Edit" variant="outlined" size="small" clickable />
-          </ListItem>
-          
-          <ListItem sx={{ py: 1.5, px: 0 }}>
-            <ListItemIcon sx={{ minWidth: 36 }}>
-              <Email fontSize="small" />
-            </ListItemIcon>
-            <ListItemText 
-              primary="Email Address" 
-              secondary="user@example.com" 
-              secondaryTypographyProps={{ variant: 'body2' }}
-            />
-            <Chip label="Change" variant="outlined" size="small" clickable />
-          </ListItem>
-        </List>
-      </Box>
-
-      <Divider sx={{ my: 3 }} />
-
-      <Box sx={{ mb: 4 }}>
-        <Typography variant="h6" sx={{ mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
-          <Security fontSize="medium" /> Security
+      {/* Profile Section */}
+      <Box sx={{ mb: 2 }}>
+        <Typography variant="h6" sx={{ 
+          mb: 2,
+          display: 'flex',
+          alignItems: 'center',
+          gap: 1.5,
+          fontWeight: 600,
+          color: 'black'
+        }}>
+          <AccountCircle fontSize="medium" />
+          Profile Information
         </Typography>
         <List>
-          <ListItem sx={{ py: 1.5, px: 0 }}>
-            <ListItemIcon sx={{ minWidth: 36 }}>
-              <Password fontSize="small" />
+          <ListItem 
+            sx={{
+              py: 1.5,
+              px: 2,
+              '&:hover': { backgroundColor: 'action.hover' },
+              borderRadius: 1,
+              transition: 'background-color 0.2s'
+            }}
+            secondaryAction={
+              <IconButton edge="end" size="small">
+                <ChevronRight />
+              </IconButton>
+            }
+          >
+            <ListItemIcon sx={{ minWidth: 40 }}>
+              <Edit fontSize="small" />
             </ListItemIcon>
-            <ListItemText primary="Password" />
-            <Chip label="Update Password" variant="outlined" size="small" clickable />
+            <ListItemText
+              primary="Username"
+              secondary="current_user123"
+              primaryTypographyProps={{ fontWeight: 500 }}
+              secondaryTypographyProps={{ variant: 'body2' }}
+            />
           </ListItem>
         </List>
       </Box>
 
       <Divider sx={{ my: 3 }} />
 
-      <Box sx={{ mb: 4 }}>
-        <Typography variant="h6" sx={{ mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
+      {/* Security Section */}
+      <Box sx={{ mb: 2 }}>
+        <Typography variant="h6" sx={{ 
+          mb: 2,
+          display: 'flex',
+          alignItems: 'center',
+          gap: 1.5,
+          fontWeight: 600,
+          color: 'black'
+        }}>
+          <Security fontSize="medium" />
+          Security
+        </Typography>
+        <List>
+          <ListItem 
+            sx={{
+              py: 1.5,
+              px: 2,
+              '&:hover': { backgroundColor: 'action.hover' },
+              borderRadius: 1,
+              transition: 'background-color 0.2s'
+            }}
+            secondaryAction={
+              <IconButton edge="end" size="small">
+                <ChevronRight />
+              </IconButton>
+            }
+          >
+            <ListItemIcon sx={{ minWidth: 40 }}>
+              <Password fontSize="small" />
+            </ListItemIcon>
+            <ListItemText 
+              primary="Password" 
+              primaryTypographyProps={{ fontWeight: 500 }}
+            />
+          </ListItem>
+        </List>
+      </Box>
+
+      <Divider sx={{ my: 3 }} />
+
+      <Box sx={{ mb: 2 }}>
+        <Typography variant="h6" sx={{ 
+          mb: 2,
+          display: 'flex',
+          alignItems: 'center',
+          gap: 1.5,
+          fontWeight: 600,
+          color: 'black'
+        }}>
+          <Block fontSize="medium" />
           Account
         </Typography>
         <List>
-          <ListItem sx={{ py: 1.5, px: 0 }}>
-            <ListItemIcon sx={{ minWidth: 36 }}>
-              <AccountCircle  fontSize="small" />
+          <ListItem 
+            sx={{
+              py: 1.5,
+              px: 2,
+              '&:hover': { backgroundColor: 'action.hover' },
+              borderRadius: 1,
+              transition: 'background-color 0.2s'
+            }}
+            secondaryAction={
+              <IconButton edge="end" size="small">
+                <ChevronRight />
+              </IconButton>
+            }
+          >
+            <ListItemIcon sx={{ minWidth: 40 }}>
+              <AccountCircle fontSize="small" />
             </ListItemIcon>
-            <ListItemText primary="Blocked Accounts"  />
+            <ListItemText 
+              primary="Blocked Accounts" 
+              primaryTypographyProps={{ fontWeight: 500 }}
+            />
           </ListItem>
         </List>
       </Box>
 
       <Divider sx={{ my: 3 }} />
 
-      {/* Support */}
-      <Box>
-        <Typography variant="h6" sx={{ mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
-          <HelpOutline fontSize="medium" /> Support
+      <Box sx={{ mb: 2 }}>
+        <Typography variant="h6" sx={{ 
+          mb: 2,
+          display: 'flex',
+          alignItems: 'center',
+          gap: 1.5,
+          fontWeight: 600,
+          color: 'black'
+        }}>
+          <HelpOutline fontSize="medium" />
+          Support
         </Typography>
-        <Link href="mailto:support@example.com" underline="hover" color="inherit" sx={{ display: 'flex', alignItems: 'center', gap: 1.5, py: 1 }}>
-          <Email fontSize="small" />
-          Contact Support Team
-        </Link>
+        <List>
+          <ListItem 
+            component="a"
+            href="mailto:support@example.com"
+            sx={{
+              py: 1.5,
+              px: 2,
+              '&:hover': { backgroundColor: 'action.hover' },
+              borderRadius: 1,
+              transition: 'background-color 0.2s',
+              textDecoration: 'none',
+              color: 'inherit'
+            }}
+            secondaryAction={
+              <IconButton edge="end" size="small">
+                <ChevronRight />
+              </IconButton>
+            }
+          >
+            <ListItemIcon sx={{ minWidth: 40 }}>
+              <Email fontSize="small" />
+            </ListItemIcon>
+            <ListItemText 
+              primary="Contact Support Team" 
+              primaryTypographyProps={{ fontWeight: 500 }}
+            />
+          </ListItem>
+        </List>
       </Box>
+
+      <Divider sx={{ my: 3 }} />
+
+      {/* Logout Section */}
+      <List>
+        <ListItem 
+          sx={{
+            py: 1.5,
+            px: 2,
+            '&:hover': { backgroundColor: 'action.hover' },
+            borderRadius: 1,
+            transition: 'background-color 0.2s',
+            color: 'error.main'
+          }}
+          secondaryAction={
+            <IconButton edge="end" size="small" color="error">
+              <ChevronRight />
+            </IconButton>
+          }
+        >
+          <ListItemIcon sx={{ minWidth: 40, color: 'inherit' }}>
+            <Lock fontSize="small" />
+          </ListItemIcon>
+          <ListItemText 
+            primary="Logout" 
+            primaryTypographyProps={{ fontWeight: 500 }}
+          />
+        </ListItem>
+      </List>
     </Container>
   );
 };

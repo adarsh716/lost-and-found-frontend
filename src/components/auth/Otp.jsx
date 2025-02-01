@@ -21,7 +21,7 @@ const OTPPage = () => {
       justifyContent="center"
       alignItems="center"
       sx={{
-        minHeight: '100vh',
+        minHeight: '91.5vh',
         background: 'linear-gradient(135deg, #000000, #333333)',
         padding: { xs: 2, sm: 3 },
       }}

@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { AppBar, Toolbar, Typography, IconButton, Menu, MenuItem} from '@mui/material';
+import { AppBar, Toolbar, Typography, IconButton, Menu, MenuItem } from '@mui/material';
 import { AccountCircle, Message, People, Settings, ExitToApp } from '@mui/icons-material';
+import { useNavigate } from 'react-router-dom';  // Import the useNavigate hook
 
-
-const Navbar = ({ onViewChange }) => {
+const Navbar = () => {
   const [anchorEl, setAnchorEl] = useState(null);
+  const navigate = useNavigate();  // Initialize useNavigate
 
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -14,8 +15,8 @@ const Navbar = ({ onViewChange }) => {
     setAnchorEl(null);
   };
 
-  const handleMenuItemClick = (view) => {
-    onViewChange(view);
+  const handleMenuItemClick = (route) => {
+    navigate(route);  // Navigate to the route passed
     handleMenuClose();
   };
 
@@ -27,6 +28,8 @@ const Navbar = ({ onViewChange }) => {
         color: '#fff',
         boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)', 
         transition: 'background 0.3s ease', 
+        height: '8.5dvh',
+        justifyContent:'center'
       }}
     >
       <Toolbar>
@@ -67,7 +70,7 @@ const Navbar = ({ onViewChange }) => {
           onClose={handleMenuClose}
           sx={{
             mt: '20px',
-            borderRadius:4,
+            borderRadius: 4,
             '& .MuiPaper-root': {
               background: 'linear-gradient(45deg, #333, #555)', 
               color: '#fff',
@@ -82,27 +85,27 @@ const Navbar = ({ onViewChange }) => {
             },
           }}
         >
-          <MenuItem onClick={() => handleMenuItemClick('communityChat')}>
+          <MenuItem onClick={() => handleMenuItemClick('/')}>
             <Message sx={{ marginRight: 1 }} />
             Community Chat
           </MenuItem>
-          <MenuItem onClick={() => handleMenuItemClick('privateChat')}>
+          <MenuItem onClick={() => handleMenuItemClick('/private-chat')}>
             <Message sx={{ marginRight: 1 }} />
             Private Chat
           </MenuItem>
-          <MenuItem onClick={() => handleMenuItemClick('profile')}>
+          <MenuItem onClick={() => handleMenuItemClick('/profile')}>
             <AccountCircle sx={{ marginRight: 1 }} />
             Profile
           </MenuItem>
-          <MenuItem onClick={() => handleMenuItemClick('messageRequest')}>
+          <MenuItem onClick={() => handleMenuItemClick('/requests')}>
             <Message sx={{ marginRight: 1 }} />
             Message Request
           </MenuItem>
-          <MenuItem onClick={() => handleMenuItemClick('friends')}>
+          <MenuItem onClick={() => handleMenuItemClick('/friends')}>
             <People sx={{ marginRight: 1 }} />
             Friends
           </MenuItem>
-          <MenuItem onClick={() => handleMenuItemClick('settings')}>
+          <MenuItem onClick={() => handleMenuItemClick('/settings')}>
             <Settings sx={{ marginRight: 1 }} />
             Settings
           </MenuItem>

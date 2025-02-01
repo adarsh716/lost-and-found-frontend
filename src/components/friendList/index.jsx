@@ -48,7 +48,7 @@ const FriendListPage = () => {
       maxWidth="md"
       sx={{
         py: 4,
-        height: '100vh',
+        height: '91.5vh',
         bgcolor: 'background.default',
         overflow: 'auto',
         '::-webkit-scrollbar': { display: 'none' }

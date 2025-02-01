@@ -35,7 +35,9 @@ const CommunityProfile = () => {
       margin: 'auto', 
       p: 4,
       backgroundColor: theme.palette.background.default,
-      overflow:'auto'
+      overflow:'auto',
+      justifyContent:'center',
+      mt:{xs:0,md:6}
     }}>
       <Grid container spacing={4}>
         <Grid item xs={12} md={4}>
@@ -104,8 +106,6 @@ const CommunityProfile = () => {
             </Box>
           </Box>
         </Grid>
-
-        {/* Right Section - Contact Details */}
         <Grid item xs={12} md={8}>
           <Box sx={{ mb: 4 }}>
             <Typography variant="h4" component="h2" gutterBottom sx={{ color: 'text.primary' }}>
@@ -160,7 +160,6 @@ const CommunityProfile = () => {
             </List>
           </Box>
 
-          {/* Additional Info */}
           <Box sx={{ 
             p: 3,
             border: '1px solid',

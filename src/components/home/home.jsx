@@ -39,12 +39,9 @@ const HomePage = () => {
       display: 'flex', 
       flexDirection: 'column', 
       backgroundColor: 'white',
-      minHeight: '100vh',
-      height: '100vh', 
+      height: '91.5dvh', 
     }}>
       <CssBaseline />
-
-      <Navbar onViewChange={handleViewChange} />
       <Box
         component="main"
         sx={{
