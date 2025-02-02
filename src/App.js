@@ -12,6 +12,8 @@ import SettingsPage from './components/settings';
 import Navbar from './components/home/Navbar'; // Assuming you have a Navbar component
 import ChangeUsernamePage from './components/profile/ChangeUsername';
 import ChangePasswordPage from './components/profile/ChangePassword';
+import BlockedAccountsPage from './components/profile/BlockedAccounts';
+import UserProfilePage from './components/profile/UserProfile';
 
 // A wrapper component to conditionally show the Navbar
 const Layout = ({ children }) => {
@@ -47,8 +49,9 @@ const App = () => {
           <Route path="/otp" element={<OTPPage />} />
           <Route path="/change-password" element={<ChangePasswordPage />} />
           <Route path="/change-username" element={<ChangeUsernamePage />} />
-          <Route path="/blocked-accounts" element={<OTPPage />} />
+          <Route path="/blocked-accounts" element={<BlockedAccountsPage />} />
           <Route path="/contact-us" element={<OTPPage />} />
+          <Route path="/user-profile" element={<UserProfilePage />} />
           <Route path="/private-chat" element={<PrivateChat />} />
           <Route path="/profile" element={<CommunityProfile />} />
           <Route path="/requests" element={<MessageRequestsPage />} />

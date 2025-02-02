@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { AppBar, Toolbar, Typography, IconButton, Menu, MenuItem } from '@mui/material';
 import { AccountCircle, Message, People, Settings, ExitToApp } from '@mui/icons-material';
-import { useNavigate } from 'react-router-dom';  // Import the useNavigate hook
+import { useNavigate } from 'react-router-dom'; 
 
 const Navbar = () => {
   const [anchorEl, setAnchorEl] = useState(null);
-  const navigate = useNavigate();  // Initialize useNavigate
+  const navigate = useNavigate(); 
 
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);

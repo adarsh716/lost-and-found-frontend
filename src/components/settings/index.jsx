@@ -21,8 +21,11 @@ import {
   ChevronRight,
   Block
 } from '@mui/icons-material';
+import { useNavigate } from 'react-router-dom'; 
+
 
 const SettingsPage = () => {
+  const navigate = useNavigate();
   return (
     <Container maxWidth="md" sx={{ 
       py: 4, 
@@ -69,6 +72,7 @@ const SettingsPage = () => {
                 <ChevronRight />
               </IconButton>
             }
+            onClick={()=> navigate('/change-username')}
           >
             <ListItemIcon sx={{ minWidth: 40 }}>
               <Edit fontSize="small" />
@@ -85,7 +89,6 @@ const SettingsPage = () => {
 
       <Divider sx={{ my: 3 }} />
 
-      {/* Security Section */}
       <Box sx={{ mb: 2 }}>
         <Typography variant="h6" sx={{ 
           mb: 2,
@@ -112,6 +115,7 @@ const SettingsPage = () => {
                 <ChevronRight />
               </IconButton>
             }
+            onClick={()=> navigate('/change-password')}
           >
             <ListItemIcon sx={{ minWidth: 40 }}>
               <Password fontSize="small" />
@@ -152,6 +156,7 @@ const SettingsPage = () => {
                 <ChevronRight />
               </IconButton>
             }
+            onClick={()=> navigate('/blocked-accounts')}
           >
             <ListItemIcon sx={{ minWidth: 40 }}>
               <AccountCircle fontSize="small" />
@@ -210,7 +215,6 @@ const SettingsPage = () => {
 
       <Divider sx={{ my: 3 }} />
 
-      {/* Logout Section */}
       <List>
         <ListItem 
           sx={{
