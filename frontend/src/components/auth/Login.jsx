@@ -4,9 +4,11 @@ import { Box, Card, CardContent, Typography, TextField, Button, Grid, Link, Icon
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useForm } from 'react-hook-form';  
 import { loginUser } from '../../api/auth'; 
+import { useAuth } from '../../context/AuthContext';
 
 const Login = () => {
   const navigate = useNavigate();
+  const { login } = useAuth();  
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -22,6 +24,12 @@ const Login = () => {
     try {
       const responseData = await loginUser(data.email, data.password); 
       console.log('Login successful:', responseData);
+      localStorage.setItem('authToken', responseData.token);
+      login({
+        userId: responseData.userId,        
+        fullName: responseData.fullName,
+        email: responseData.email,
+      });
       navigate("/")
     } catch (error) {
       console.error('Login failed:', error);
@@ -84,7 +92,7 @@ const Login = () => {
               display: 'flex',
               flexDirection: 'column',
             }}
-            onSubmit={handleSubmit(onSubmit)}  // Use handleSubmit to handle form submission
+            onSubmit={handleSubmit(onSubmit)}  
           >
             <TextField
               label="Email Address"

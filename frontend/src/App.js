@@ -9,17 +9,16 @@ import CommunityProfile from './components/profile';
 import MessageRequestsPage from './components/friendRequest';
 import FriendListPage from './components/friendList';
 import SettingsPage from './components/settings';
-import Navbar from './components/home/Navbar'; // Assuming you have a Navbar component
+import Navbar from './components/home/Navbar'; 
 import ChangeUsernamePage from './components/profile/ChangeUsername';
 import ChangePasswordPage from './components/profile/ChangePassword';
 import BlockedAccountsPage from './components/profile/BlockedAccounts';
 import UserProfilePage from './components/profile/UserProfile';
 
-// A wrapper component to conditionally show the Navbar
+
 const Layout = ({ children }) => {
   const location = useLocation();
 
-  // Hide Navbar on Login, OTP, and Register pages
   const hideNavbarRoutes = ['/login', '/register', '/otp'];
   const shouldShowNavbar = !hideNavbarRoutes.includes(location.pathname);
 
@@ -28,7 +27,7 @@ const Layout = ({ children }) => {
       style={{
         display: 'flex',
         flexDirection: 'column',
-        minHeight: '91.5dvh', // Limits height to the full viewport
+        minHeight: '91.5dvh', 
         overflow: 'hidden',
       }}
     >

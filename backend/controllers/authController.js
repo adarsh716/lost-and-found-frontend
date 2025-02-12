@@ -27,7 +27,6 @@ exports.register = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Generate OTP and OTP expiry
     const otp = generateOTP();
     const otpExpiry = getOtpExpiryTime();
 
@@ -35,8 +34,8 @@ exports.register = async (req, res) => {
       fullName,
       email,
       password: hashedPassword,
-      otp, // Store OTP in user record
-      otpExpiry, // Store OTP expiry
+      otp, 
+      otpExpiry,
     });
 
     await user.save();
@@ -98,8 +97,15 @@ exports.login = async (req, res) => {
 
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
-    res.status(200).json({ msg: 'Login successful', token });
+    res.status(200).json({
+      msg: 'Login successful',
+      token,
+      userId: user._id,        
+      fullName: user.fullName,  
+      email: user.email,   
+    });
   } catch (err) {
     res.status(500).json({ msg: 'Error logging in', error: err.message });
   }
 };
+

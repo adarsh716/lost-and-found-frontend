@@ -19,7 +19,7 @@ export const registerUser = async (fullName,email, password) => {
     }
   };
 
-  export const verifyOtp = async (email, otp) => {
+export const verifyOtp = async (email, otp) => {
     try {
       const response = await apiClient.post('/api/auth/verify-otp', { email, otp });
       return response.data; 
@@ -27,3 +27,22 @@ export const registerUser = async (fullName,email, password) => {
       throw error.response ? error.response.data : error.message;
     }
   };
+
+export const updateProfile = async (userId,fullName,address,phoneNumber,email ) => {
+    try {
+      const response = await apiClient.put('/api/profile/', { userId,fullName,address,phoneNumber ,email });
+      return response.data; 
+    } catch (error) {
+      throw error.response ? error.response.data : error.message;
+    }
+  };
+
+  export const getUserData = async (userId) => {
+    try {
+      const response = await apiClient.get(`/api/profile`, { params: { userId } });
+      return response.data; 
+    } catch (error) {
+      throw error.response ? error.response.data : error.message;
+    }
+  };
+  

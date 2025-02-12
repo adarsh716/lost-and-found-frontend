@@ -16,8 +16,13 @@ const Navbar = () => {
   };
 
   const handleMenuItemClick = (route) => {
-    navigate(route);  // Navigate to the route passed
+    navigate(route);  
     handleMenuClose();
+  };
+
+  const handleLogout = () => {
+    localStorage.clear();  
+    navigate('/login');
   };
 
   return (
@@ -109,7 +114,7 @@ const Navbar = () => {
             <Settings sx={{ marginRight: 1 }} />
             Settings
           </MenuItem>
-          <MenuItem onClick={handleMenuClose}>
+          <MenuItem onClick={handleLogout}> 
             <ExitToApp sx={{ marginRight: 1 }} />
             Logout
           </MenuItem>
