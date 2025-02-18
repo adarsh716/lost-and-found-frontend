@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Container,
   Box,
@@ -7,37 +7,64 @@ import {
   Button,
   IconButton,
   Divider,
-  useTheme
+  useTheme,
+  Snackbar,
+  Alert,
 } from '@mui/material';
 import ArrowBack from '@mui/icons-material/ArrowBack';
+import { useAuth } from '../../context/AuthContext';
+import { updateUsername } from '../../api/auth';
 
 const ChangeUsernamePage = () => {
   const [newUsername, setNewUsername] = useState('');
+  const [displayUsername, setDisplayUsername] = useState(''); 
+  const [loading, setLoading] = useState(false);
+  const [feedback, setFeedback] = useState({ message: '', type: '' });
   const theme = useTheme();
-  const currentUsername = "current_user123"; // Replace with actual username from state/context
+  const { user, updateUserData } = useAuth(); 
 
-  const handleSubmit = (e) => {
+  useEffect(() => {
+    setDisplayUsername(user.fullName); 
+  }, [user.fullName]);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Add your username change logic here
-    console.log('New username:', newUsername);
+    setLoading(true);
+    try {
+      const response = await updateUsername(user.userId, newUsername);
+      if (response.success) {
+        setFeedback({ message: 'Username updated successfully!', type: 'success' });    
+        setDisplayUsername(newUsername); 
+        updateUserData({ fullName: newUsername });
+      } else {
+        setFeedback({ message: response.message || 'Failed to update username.', type: 'error' });
+      }
+    } catch (error) {
+      setFeedback({ message: error.message || 'An error occurred.', type: 'error' });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <Container maxWidth="md" sx={{ 
-      py: 4,
-      minHeight: '91.5dvhvh',
-      backgroundColor: theme.palette.mode === 'dark' ? 'rgba(0,0,0,0.8)' : '#fff',
-      color: theme.palette.mode === 'dark' ? '#fff' : '#000',
-    }}>
+    <Container
+      maxWidth="md"
+      sx={{
+        py: 4,
+        minHeight: '91.5vh',
+        backgroundColor: theme.palette.mode === 'dark' ? 'rgba(0,0,0,0.8)' : '#fff',
+        color: theme.palette.mode === 'dark' ? '#fff' : '#000',
+      }}
+    >
       <Box sx={{ mb: 4 }}>
-        <IconButton 
-          href="/settings" 
-          sx={{ 
+        <IconButton
+          href="/settings"
+          sx={{
             color: 'inherit',
             mb: 2,
             '&:hover': {
-              backgroundColor: 'rgba(255, 255, 255, 0.1)'
-            }
+              backgroundColor: 'rgba(255, 255, 255, 0.1)',
+            },
           }}
         >
           <ArrowBack />
@@ -56,11 +83,11 @@ const ChangeUsernamePage = () => {
           p: 4,
           border: `1px solid ${theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'}`,
           borderRadius: 2,
-          boxShadow: 3
+          boxShadow: 3,
         }}
       >
         <Typography variant="body1" sx={{ mb: 3 }}>
-          Current Username: <strong>{currentUsername}</strong>
+          Current Username: <strong>{displayUsername}</strong> 
         </Typography>
 
         <Divider sx={{ my: 3, borderColor: 'rgba(255, 255, 255, 0.1)' }} />
@@ -74,23 +101,11 @@ const ChangeUsernamePage = () => {
           required
           sx={{
             mb: 3,
-            // '& .MuiOutlinedInput-root': {
-            //   color: 'inherit',
-            //   '& fieldset': {
-            //     borderColor: 'rgba(255, 255, 255, 0.23)'
-            //   },
-            //   '&:hover fieldset': {
-            //     borderColor: 'rgba(255, 255, 255, 0.5)'
-            //   },
-            //   '&.Mui-focused fieldset': {
-            //     borderColor: 'rgba(255, 255, 255, 0.8)'
-            //   }
-            // }
           }}
           InputLabelProps={{
             sx: {
-              color: 'inherit'
-            }
+              color: 'inherit',
+            },
           }}
         />
 
@@ -98,26 +113,44 @@ const ChangeUsernamePage = () => {
           type="submit"
           fullWidth
           variant="contained"
+          disabled={loading}
           sx={{
             py: 1.5,
             backgroundColor: theme.palette.mode === 'dark' ? '#fff' : '#000',
             color: theme.palette.mode === 'dark' ? '#000' : '#fff',
             '&:hover': {
-              backgroundColor: theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.9)' : 'rgba(0,0,0,0.9)'
-            }
+              backgroundColor: theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.9)' : 'rgba(0,0,0,0.9)',
+            },
           }}
         >
-          Save Changes
+          {loading ? 'Updating...' : 'Save Changes'}
         </Button>
       </Box>
 
-      <Typography variant="body2" sx={{ 
-        mt: 3,
-        textAlign: 'center',
-        color: theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.7)'
-      }}>
+      <Typography
+        variant="body2"
+        sx={{
+          mt: 3,
+          textAlign: 'center',
+          color: theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.7)',
+        }}
+      >
         Username can only be changed once every 30 days
       </Typography>
+
+      <Snackbar
+        open={feedback.message !== ''}
+        autoHideDuration={6000}
+        onClose={() => setFeedback({ message: '', type: '' })}
+      >
+        <Alert
+          onClose={() => setFeedback({ message: '', type: '' })}
+          severity={feedback.type}
+          sx={{ width: '100%' }}
+        >
+          {feedback.message}
+        </Alert>
+      </Snackbar>
     </Container>
   );
 };

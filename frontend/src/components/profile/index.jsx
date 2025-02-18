@@ -40,7 +40,7 @@ const CommunityProfile = () => {
   const [fetchingData, setFetchingData] = useState(true);
   const [error, setError] = useState(null);
   const [originalData, setOriginalData] = useState({
-    communityName: '',
+    fullName: '',
     email: '',
     phone: '',
     address: '',
@@ -61,7 +61,7 @@ const CommunityProfile = () => {
         const responseData = await getUserData(user.userId);
 
         const newUserData = {
-          communityName: responseData.user.fullName || 'No community name',
+          fullName: responseData.user.fullName || 'No community name',
           email: responseData.user.email || 'No email provided',
           phone: responseData.user.phoneNumber || 'No phone number provided',
           address: responseData.user.address || 'No address provided',
@@ -84,7 +84,7 @@ const CommunityProfile = () => {
   }, []);
 
   const handleSave = async () => {
-    if (!editData.communityName || !editData.email || !editData.phone || !editData.address) {
+    if (!editData.fullName || !editData.email || !editData.phone || !editData.address) {
       setError('All fields are required.');
       return;
     }
@@ -95,7 +95,7 @@ const CommunityProfile = () => {
     try {
       await updateProfile(
         user.userId,
-        editData.communityName,
+        editData.fullName,
         editData.address,
         editData.phone,
         editData.email
@@ -173,7 +173,7 @@ const CommunityProfile = () => {
                 component="h1"
                 sx={{ color: 'text.primary', textAlign: 'center' }}
               >
-                {originalData.communityName}
+                {originalData.fullName}
               </Typography>
 
               <Box
@@ -315,8 +315,8 @@ const CommunityProfile = () => {
             fullWidth
             margin="dense"
             label="Community Name"
-            value={editData.communityName}
-            onChange={(e) => setEditData({ ...editData, communityName: e.target.value })}
+            value={editData.fullName}
+            onChange={(e) => setEditData({ ...editData, fullName: e.target.value })}
             required
           />
           <TextField

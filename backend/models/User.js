@@ -9,6 +9,7 @@ const userSchema = new mongoose.Schema({
   otpExpiration: Date,
   address: { type: String }, 
   phoneNumber: { type: String }, 
+  usernameLastUpdated: { type: Date, default: null },
   friends: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }] 
 });
 

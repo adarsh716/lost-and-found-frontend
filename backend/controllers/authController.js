@@ -4,7 +4,6 @@ const nodemailer = require('nodemailer');
 const User = require('../models/User');
 require('dotenv').config();
 
-// Nodemailer transporter setup
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
@@ -40,7 +39,6 @@ exports.register = async (req, res) => {
 
     await user.save();
 
-    // Send OTP via email
     await transporter.sendMail({
       from: process.env.EMAIL_USER,
       to: email,
@@ -56,7 +54,6 @@ exports.register = async (req, res) => {
   }
 };
 
-// OTP verification
 exports.verifyOtp = async (req, res) => {
   const { email, otp } = req.body;
 
@@ -64,12 +61,10 @@ exports.verifyOtp = async (req, res) => {
     const user = await User.findOne({ email });
     if (!user) return res.status(400).json({ msg: 'User not found' });
 
-    // Check if OTP matches and hasn't expired
     if (user.otp !== otp || user.otpExpiry < Date.now()) {
       return res.status(400).json({ msg: 'Invalid or expired OTP' });
     }
 
-    // Mark user as verified and clear OTP and expiry
     user.isVerified = true;
     user.otp = null;
     user.otpExpiry = null;
@@ -82,7 +77,6 @@ exports.verifyOtp = async (req, res) => {
   }
 };
 
-// User login
 exports.login = async (req, res) => {
   const { email, password } = req.body;
 
@@ -109,3 +103,33 @@ exports.login = async (req, res) => {
   }
 };
 
+exports.changePassword = async (req, res) => {
+  const { userId, currentPassword, newPassword } = req.body;
+
+  try {
+
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ msg: 'User not found' });
+
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ msg: 'Current password is incorrect' });
+    }
+
+    const isSamePassword = await bcrypt.compare(newPassword, user.password);
+    if (isSamePassword) {
+      return res.status(400).json({ msg: 'New password cannot be the same as the current password' });
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    user.password = hashedPassword;
+
+    await user.save();
+
+    res.status(200).json({ msg: 'Password changed successfully' });
+  } catch (err) {
+    console.error('Error changing password:', err); // Add this line to log the error
+    res.status(500).json({ msg: 'Error changing password', error: err.message });
+  }  
+};

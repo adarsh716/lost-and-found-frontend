@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Container,
   Box,
@@ -12,19 +12,25 @@ import {
 } from '@mui/material';
 import {
   AccountCircle,
-  Email,
-  Lock,
-  HelpOutline,
-  Security,
   Edit,
-  Password,
   ChevronRight,
-  Block
+  Password,
+  Security,
+  Block,
+  Lock
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom'; 
+import { useAuth } from '../../context/AuthContext';
 
 const SettingsPage = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const [username, setUsername] = useState(user.fullName);  
+
+  useEffect(() => {
+    setUsername(user.fullName);  
+  }, [user.fullName]); 
+
   return (
     <Container maxWidth="md" sx={{ py: 4, mt: 2, mb: 2 }}>
       <Box sx={{ 
@@ -43,7 +49,6 @@ const SettingsPage = () => {
           Account Settings
         </Typography>
 
-        {/* Profile Section */}
         <Box sx={{ mb: 2 }}>
           <Typography variant="h6" sx={{ 
             mb: 2,
@@ -77,7 +82,7 @@ const SettingsPage = () => {
               </ListItemIcon>
               <ListItemText
                 primary="Username"
-                secondary="current_user123"
+                secondary={username}  
                 primaryTypographyProps={{ fontWeight: 500 }}
                 secondaryTypographyProps={{ variant: 'body2' }}
               />

@@ -3,46 +3,66 @@ import apiClient from '../services/apiclient';
 export const loginUser = async (email, password) => {
   try {
     const response = await apiClient.post('/api/auth/login', { email, password });
-    return response.data; 
+    return response.data;
   } catch (error) {
     throw error.response ? error.response.data : error.message;
   }
 };
 
 
-export const registerUser = async (fullName,email, password) => {
-    try {
-      const response = await apiClient.post('/api/auth/register', {fullName, email, password });
-      return response.data; 
-    } catch (error) {
-      throw error.response ? error.response.data : error.message;
-    }
-  };
+export const registerUser = async (fullName, email, password) => {
+  try {
+    const response = await apiClient.post('/api/auth/register', { fullName, email, password });
+    return response.data;
+  } catch (error) {
+    throw error.response ? error.response.data : error.message;
+  }
+};
 
 export const verifyOtp = async (email, otp) => {
-    try {
-      const response = await apiClient.post('/api/auth/verify-otp', { email, otp });
-      return response.data; 
-    } catch (error) {
-      throw error.response ? error.response.data : error.message;
-    }
-  };
+  try {
+    const response = await apiClient.post('/api/auth/verify-otp', { email, otp });
+    return response.data;
+  } catch (error) {
+    throw error.response ? error.response.data : error.message;
+  }
+};
 
-export const updateProfile = async (userId,fullName,address,phoneNumber,email ) => {
-    try {
-      const response = await apiClient.put('/api/profile/', { userId,fullName,address,phoneNumber ,email });
-      return response.data; 
-    } catch (error) {
-      throw error.response ? error.response.data : error.message;
-    }
-  };
+export const updateProfile = async (userId, fullName, address, phoneNumber, email) => {
+  try {
+    const response = await apiClient.put('/api/profile/', { userId, fullName, address, phoneNumber, email });
+    return response.data;
+  } catch (error) {
+    throw error.response ? error.response.data : error.message;
+  }
+};
 
-  export const getUserData = async (userId) => {
-    try {
-      const response = await apiClient.get(`/api/profile`, { params: { userId } });
-      return response.data; 
-    } catch (error) {
-      throw error.response ? error.response.data : error.message;
-    }
-  };
-  
+export const getUserData = async (userId) => {
+  try {
+    const response = await apiClient.get(`/api/profile`, { params: { userId } });
+    return response.data;
+  } catch (error) {
+    throw error.response ? error.response.data : error.message;
+  }
+};
+
+export const updateUsername = async (userId, fullName) => {
+  try {
+    const response = await apiClient.put('/api/profile/change-username', { userId, fullName });
+    return response.data;
+  } catch (error) {
+    throw error.response ? error.response.data : error.message;
+  }
+};
+
+
+export const changePassword = async (userId, currentPassword, newPassword) => {
+  try {
+    const response = await apiClient.put('/api/auth/change', { userId, currentPassword, newPassword });
+    return response.data;
+  } catch (error) {
+    throw error.response ? error.response.data : error.message;
+  }
+};
+
+

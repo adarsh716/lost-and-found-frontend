@@ -6,25 +6,47 @@ import {
   TextField,
   Button,
   IconButton,
-  Divider,
   useTheme
 } from '@mui/material';
 import ArrowBack from '@mui/icons-material/ArrowBack';
 import { Lock, Visibility, VisibilityOff } from '@mui/icons-material';
+import { changePassword } from '../../api/auth';
+import { useAuth } from '../../context/AuthContext';
 
 const ChangePasswordPage = () => {
+  const { user } = useAuth();
   const [passwords, setPasswords] = useState({
     current: '',
     new: '',
     confirm: ''
   });
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const theme = useTheme();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Add password change logic here
-    console.log('Password change request:', passwords);
+    if (passwords.new !== passwords.confirm) {
+      setError('New passwords do not match');
+      return;
+    }
+
+    try {
+      const response = await changePassword(user.userId, passwords.current, passwords.new);
+      setSuccess('Password updated successfully');
+      setError('');
+      setPasswords(
+        {
+          current: '',
+          new: '',
+          confirm: ''
+        }
+      )
+    } catch (err) {
+      setError('Error updating password');
+      setSuccess('');
+    }
   };
 
   const handleInputChange = (field) => (e) => {
@@ -36,16 +58,16 @@ const ChangePasswordPage = () => {
   };
 
   return (
-    <Container maxWidth="md" sx={{ 
+    <Container maxWidth="md" sx={{
       py: 4,
-      minHeight: '91.5dvhvh',
+      minHeight: '91.5vh',
       backgroundColor: theme.palette.mode === 'dark' ? 'rgba(0,0,0,0.8)' : '#fff',
       color: theme.palette.mode === 'dark' ? '#fff' : '#000',
     }}>
       <Box sx={{ mb: 4 }}>
-        <IconButton 
-          href="/settings" 
-          sx={{ 
+        <IconButton
+          href="/settings"
+          sx={{
             color: 'inherit',
             mb: 2,
             '&:hover': {
@@ -59,6 +81,9 @@ const ChangePasswordPage = () => {
           Change Password
         </Typography>
       </Box>
+
+      {error && <Typography color="error">{error}</Typography>}
+      {success && <Typography color="success.main">{success}</Typography>}
 
       <Box
         component="form"
@@ -80,15 +105,8 @@ const ChangePasswordPage = () => {
           value={passwords.current}
           onChange={handleInputChange('current')}
           required
-          sx={{
-            mb: 3,
-            
-          }}
-          InputLabelProps={{
-            sx: {
-              color: 'inherit'
-            }
-          }}
+          sx={{ mb: 3 }}
+          InputLabelProps={{ sx: { color: 'inherit' } }}
           InputProps={{
             endAdornment: (
               <IconButton
@@ -110,14 +128,8 @@ const ChangePasswordPage = () => {
           value={passwords.new}
           onChange={handleInputChange('new')}
           required
-          sx={{
-            mb: 3,
-          }}
-          InputLabelProps={{
-            sx: {
-              color: 'inherit'
-            }
-          }}
+          sx={{ mb: 3 }}
+          InputLabelProps={{ sx: { color: 'inherit' } }}
         />
 
         <TextField
@@ -128,14 +140,8 @@ const ChangePasswordPage = () => {
           value={passwords.confirm}
           onChange={handleInputChange('confirm')}
           required
-          sx={{
-            mb: 3,
-          }}
-          InputLabelProps={{
-            sx: {
-              color: 'inherit'
-            }
-          }}
+          sx={{ mb: 3 }}
+          InputLabelProps={{ sx: { color: 'inherit' } }}
         />
 
         <Button
@@ -156,7 +162,7 @@ const ChangePasswordPage = () => {
         </Button>
       </Box>
 
-      <Typography variant="body2" sx={{ 
+      <Typography variant="body2" sx={{
         mt: 3,
         textAlign: 'center',
         color: theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.7)'
