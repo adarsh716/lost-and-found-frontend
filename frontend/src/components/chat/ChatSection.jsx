@@ -17,37 +17,109 @@ import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import ForumIcon from '@mui/icons-material/Forum';
 import { styled } from '@mui/material/styles';
 import CloseIcon from '@mui/icons-material/Close';
+import socketServices from '../../services/socketServices';
+import { getCommunityMessages, sendCommunityMessage } from '../../api/auth';
+import { useAuth } from '../../context/AuthContext'
 
 const CommunityChat = () => {
     const [message, setMessage] = useState('');
     const [searchQuery, setSearchQuery] = useState('');
-    const fileInputRef = useRef(null);
+    const [messages, setMessages] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState('');
     const [selectedImage, setSelectedImage] = useState(null);
-    const [currentUser] = useState({ fullName: 'Alice Smith', avatar: 'AS' });
+    const fileInputRef = useRef(null);
+    const messagesEndRef = useRef(null);
 
-    const [messages, setMessages] = useState([
-        {
-            id: 1,
-            user: 'System Bot',
-            text: 'Anybody affected by coronavirus?',
-            timestamp: 'MAR 13:34',
-            isCurrentUser: false
-        },
-        {
-            id: 2,
-            user: 'John Doe',
-            text: 'At our office 3 ppl are infected. We work from home.',
-            timestamp: 'MAR 13:35',
-            isCurrentUser: false
-        },
-        {
-            id: 3,
-            user: currentUser.fullName,
-            text: 'All good here. We wash hands and stay home.',
-            timestamp: 'MAR 13:36',
-            isCurrentUser: true
-        },
-    ]);
+    const { user } = useAuth();
+
+    const currentUser = JSON.parse(localStorage.getItem('user')) || {};
+
+    useEffect(() => {
+        initializeChat();
+        return () => {
+            socketServices.disconnect();
+        };
+    }, []);
+
+    const initializeChat = async () => {
+        try {
+            socketServices.connect();
+
+            const fetchedMessages = await getCommunityMessages();
+            setMessages(fetchedMessages);
+
+            socketServices.on('newCommunityMessage', handleNewMessage);
+
+            setLoading(false);
+        } catch (err) {
+            setError('Failed to load messages');
+            setLoading(false);
+        }
+    };
+
+    const handleNewMessage = (newMessage) => {
+        setMessages(prev => [...prev, newMessage]);
+        scrollToBottom();
+    };
+
+    const scrollToBottom = () => {
+        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    };
+
+    const handleSendMessage = async () => {
+        if (!message.trim()) return;
+
+        try {
+            const messageData = {
+                text: message.trim(),
+                userId: user.userId,
+                username: user.fullName,
+                timestamp: new Date().toISOString()
+            };
+            const sentMessage = await sendCommunityMessage(messageData);
+
+            socketServices.emit('sendCommunityMessage', sentMessage);
+
+            setMessages(prev => [...prev, sentMessage]);
+
+            setMessage('');
+
+            scrollToBottom();
+        } catch (err) {
+            console.error('Error sending message:', err);
+            setError('Failed to send message');
+        }
+    };
+
+    const handleImageUpload = async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        try {
+            const base64 = await convertToBase64(file);
+            const messageData = {
+                image: base64,
+                userId: currentUser._id,
+                username: currentUser.username
+            };
+
+            const sentMessage = await sendCommunityMessage(messageData);
+            socketServices.emit('sendCommunityMessage', sentMessage);
+        } catch (err) {
+            setError('Failed to upload image');
+        }
+        e.target.value = null;
+    };
+
+    const convertToBase64 = (file) => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = error => reject(error);
+        });
+    };
 
     const filteredMessages = messages.filter(msg => {
         const matchesSearch = msg.text?.toLowerCase().includes(searchQuery.toLowerCase());
@@ -69,36 +141,6 @@ const CommunityChat = () => {
     const handleCloseImage = () => {
         setSelectedImage(null);
     }
-
-    const handleSendMessage = () => {
-        if (message.trim()) {
-            const newMessage = {
-                id: Date.now(), 
-                user: currentUser.fullName,
-                text: message,
-                timestamp: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
-                isCurrentUser: true
-            };
-            setMessages(prev => [...prev, newMessage]);
-            setMessage('');
-        }
-    };
-
-    const handleImageUpload = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            const imageUrl = URL.createObjectURL(file);
-            const newMessage = {
-                id: Date.now(), // Better ID generation
-                user: currentUser.fullName,
-                image: imageUrl,
-                timestamp: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
-                isCurrentUser: true
-            };
-            setMessages(prev => [...prev, newMessage]);
-            e.target.value = null;
-        }
-    };
 
     const StyledMessage = styled(ListItem)(({ theme, iscurrentuser }) => ({
         flexDirection: iscurrentuser ? 'row-reverse' : 'row',
@@ -191,11 +233,17 @@ const CommunityChat = () => {
                 </Box>
 
                 {filteredMessages.map((msg) => (
-                    <StyledMessage key={msg.id} iscurrentuser={msg.isCurrentUser ? 1 : 0}>
-                        <MessageBubble iscurrentuser={msg.isCurrentUser ? 1 : 0}>
-                            {!msg.isCurrentUser && (
+                    <StyledMessage
+                        key={msg._id || msg.id}
+                        iscurrentuser={msg.userId === user.userId ? 1 : 0} 
+                    >
+                        <MessageBubble
+                            iscurrentuser={msg.userId === user.userId ? 1 : 0}
+                        >
+
+                            {msg.userId !== currentUser._id && (
                                 <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 0.5 }}>
-                                    {msg.user}
+                                    {msg.username}
                                 </Typography>
                             )}
                             {msg.text && <Typography variant="body1">{msg.text}</Typography>}
@@ -208,7 +256,6 @@ const CommunityChat = () => {
                                         maxHeight: '40vh',
                                         borderRadius: '12px',
                                         marginTop: msg.text ? '8px' : 0,
-                                        transition: 'transform 0.3s ease',
                                         cursor: 'pointer'
                                     }}
                                     onClick={() => handleImageClick(msg.image)}
@@ -220,10 +267,13 @@ const CommunityChat = () => {
                                     display: 'block',
                                     textAlign: 'right',
                                     mt: 0.5,
-                                    color: msg.isCurrentUser ? 'rgba(255,255,255,0.7)' : 'text.secondary'
+                                    color: msg.userId === currentUser._id ? 'rgba(255,255,255,0.7)' : 'text.secondary'
                                 }}
                             >
-                                {msg.timestamp}
+                                {new Date(msg.timestamp).toLocaleTimeString('en-US', {
+                                    hour: '2-digit',
+                                    minute: '2-digit'
+                                })}
                             </Typography>
                         </MessageBubble>
                     </StyledMessage>

@@ -65,4 +65,39 @@ export const changePassword = async (userId, currentPassword, newPassword) => {
   }
 };
 
+export const getCommunityMessages = async () => {
+  try {
+      const response = await apiClient.get('/api/messages/community');
+      return response.data;
+  } catch (error) {
+      throw error.response ? error.response.data : error.message;
+  }
+};
+
+export const sendCommunityMessage = async (messageData) => {
+  try {
+      const response = await apiClient.post('/api/messages/community', messageData);
+      return response.data;
+  } catch (error) {
+      throw error.response ? error.response.data : error.message;
+  }
+};
+
+export const getPrivateMessages = async (recipientId) => {
+  try {
+      const response = await apiClient.get(`/api/messages/private/${recipientId}`);
+      return response.data;
+  } catch (error) {
+      throw error.response ? error.response.data : error.message;
+  }
+};
+
+export const sendPrivateMessage = async (messageData) => {
+  try {
+      const response = await apiClient.post('/api/messages/private', messageData);
+      return response.data;
+  } catch (error) {
+      throw error.response ? error.response.data : error.message;
+  }
+};
 
