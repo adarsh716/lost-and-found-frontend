@@ -11,7 +11,7 @@ import {
     Paper,
     Typography,
     Box,
-    Badge
+    // Badge
 } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
@@ -19,6 +19,8 @@ import ArrowBack from '@mui/icons-material/ArrowBack';
 import { styled } from '@mui/material/styles';
 import CloseIcon from '@mui/icons-material/Close';
 import { AccountCircle } from '@mui/icons-material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { useNavigate } from 'react-router-dom';
 
 const PrivateChat = () => {
     const [message, setMessage] = useState('');
@@ -28,6 +30,7 @@ const PrivateChat = () => {
     const [selectedImage, setSelectedImage] = useState(null);
     const [selectedUser, setSelectedUser] = useState(1);
     const [currentUser] = useState({ id: 0, fullName: 'Alice Smith', avatar: 'AS' });
+    const [selectedProfile, setSelectedProfile] = useState(null); // New state to hold the selected user's profile
 
     const [users, setUsers] = useState([
         { id: 1, name: 'Adarsh Lakhanpal', avatar: 'A', online: true, lastMessage: 'At our office 3 ppl are infected...', timestamp: 'MAR 13:35' },
@@ -42,9 +45,30 @@ const PrivateChat = () => {
             { id: 2, user: 'Adarsh', text: 'At our office 3 ppl are infected. We work from home.', timestamp: 'MAR 13:35', isCurrentUser: false },
             { id: 3, user: currentUser.fullName, text: 'All good here. We wash hands and stay home.', timestamp: 'MAR 13:36', isCurrentUser: true },
         ],
-        2: [],
-        3: [],
+        2: [
+            { id: 1, user: 'John', text: 'Did you find your thing?', timestamp: 'MAR 13:34', isCurrentUser: false },
+            { id: 2, user: currentUser.fullName, text: 'Not yet.', timestamp: 'MAR 13:36', isCurrentUser: true },
+        ],
+        3: [
+            { id: 1, user: 'Jane', text: 'Found your black wallet near front gate fountain.', timestamp: 'MAR 13:34', isCurrentUser: false },
+            { id: 2, user: currentUser.fullName, text: 'Oh that is not mine.', timestamp: 'MAR 13:35', isCurrentUser: true },
+            { id: 3, user: currentUser.fullName, text: 'Will update you about the info.', timestamp: 'MAR 13:36', isCurrentUser: true },
+        ],
     });
+
+    const navigate = useNavigate();
+
+    const handleDeleteChat = (userId) => {
+        setUsers(prevUsers => prevUsers.filter(user => user.id !== userId));
+        setMessages(prevMessages => {
+            const updatedMessages = { ...prevMessages };
+            delete updatedMessages[userId];
+            return updatedMessages;
+        });
+        if (selectedUser === userId) {
+            setSelectedUser(null);
+        }
+    };
 
     const filteredUsers = users.filter(user =>
         user.name.toLowerCase().includes(userSearchQuery.toLowerCase())
@@ -64,6 +88,15 @@ const PrivateChat = () => {
             });
         };
     }, [messages]);
+
+    const handleProfileClick = (user) => {
+        setSelectedProfile(user); // Set the selected user's profile to show
+        navigate(`/UserProfile/`); // Navigate to UserProfile page with the user's id
+    };
+
+    const handleCloseProfile = () => {
+        setSelectedProfile(null); // Close the profile view
+    };
 
     const handleImageClick = (imageUrl) => {
         setSelectedImage(imageUrl);
@@ -114,6 +147,10 @@ const PrivateChat = () => {
         alignItems: 'flex-start',
         padding: theme.spacing(1),
         transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+        position: 'relative',
+        '&:hover .delete-icon': {
+            opacity: 1,
+        },
     }));
 
     const MessageBubble = styled(Paper)(({ theme, iscurrentuser }) => ({
@@ -129,6 +166,14 @@ const PrivateChat = () => {
         position: 'relative',
         cursor: 'pointer',
     }));
+
+    const handleDeleteMessage = (messageId) => {
+        setMessages((prevMessages) => {
+            const updatedMessages = { ...prevMessages };
+            updatedMessages[selectedUser] = updatedMessages[selectedUser].filter((msg) => msg.id !== messageId);
+            return updatedMessages;
+        });
+    };
 
     return (
         <Container maxWidth={false} sx={{
@@ -208,7 +253,7 @@ const PrivateChat = () => {
             {/* Chat Area */}
             <Box sx={{
                 flexGrow: 1,
-                height:'91.5dvh',
+                height: '91.5dvh',
                 display: { xs: selectedUser ? 'flex' : 'none', sm: 'flex' },
                 flexDirection: 'column',
             }}>
@@ -223,18 +268,16 @@ const PrivateChat = () => {
                             borderBottom: '1px solid #ddd',
                         }}>
                             <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                <IconButton
-                                    onClick={() => setSelectedUser(null)}
-                                    sx={{ display: { sm: 'none' }, mr: 1 }}
-                                >
-                                    <ArrowBack />
+                                <IconButton onClick={(e) => { e.stopPropagation(); handleProfileClick(); }} sx={{ ml: 1 }}>
+
+                                    <AccountCircle sx={{ mr: 1, color: 'text.primary', height: 30, width: 30 }} />
+
+                                    <Typography variant="h6" sx={{ fontWeight: 600, color: 'text.primary' }}>
+                                        {users.find(u => u.id === selectedUser)?.name}
+                                    </Typography>
                                 </IconButton>
-                                <AccountCircle sx={{ mr: 1, color: 'text.primary', height: 30, width: 30 }} />
-                                <Typography variant="h6" sx={{ fontWeight: 600, color: 'text.primary' }}>
-                                    {users.find(u => u.id === selectedUser)?.name}
-                                </Typography>
                             </Box>
-                            {/* <TextField
+                            <TextField
                                 variant="outlined"
                                 placeholder="Search messages..."
                                 size="small"
@@ -247,7 +290,7 @@ const PrivateChat = () => {
                                         backgroundColor: 'background.paper',
                                     },
                                 }}
-                            /> */}
+                            />
                         </Box>
 
                         <List sx={{
@@ -258,32 +301,62 @@ const PrivateChat = () => {
                             '&::-webkit-scrollbar-track': { background: '#f0f0f0' },
                             '&::-webkit-scrollbar-thumb': { background: '#888' }
                         }}>
-                            {filteredMessages.map((msg) => (
-                                <StyledMessage key={msg.id} iscurrentuser={msg.isCurrentUser ? 1 : 0}>
-                                    <MessageBubble iscurrentuser={msg.isCurrentUser ? 1 : 0}>
-                                        {!msg.isCurrentUser && (
-                                            <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 0.5 }}>
-                                                {msg.user}
-                                            </Typography>
-                                        )}
-                                        {msg.text && <Typography variant="body1">{msg.text}</Typography>}
-                                        {msg.image && (
-                                            <img
-                                                src={msg.image}
-                                                alt="Uploaded content"
-                                                style={{
-                                                    maxWidth: '100%',
-                                                    maxHeight: '40vh',
-                                                    borderRadius: '12px',
-                                                    marginTop: msg.text ? '8px' : 0,
-                                                    cursor: 'pointer'
-                                                }}
-                                                onClick={() => handleImageClick(msg.image)}
-                                            />
-                                        )}
-                                    </MessageBubble>
-                                </StyledMessage>
-                            ))}
+                            {filteredMessages.map((msg) => {
+                                const isCurrentUser = msg.isCurrentUser;
+
+                                return (
+                                    <StyledMessage key={msg.id} iscurrentuser={isCurrentUser ? 1 : 0}>
+                                        <MessageBubble
+                                            iscurrentuser={isCurrentUser ? 1 : 0}
+                                            sx={{
+                                                position: 'relative',
+                                                '&:hover .delete-button': {
+                                                    opacity: 1,  
+                                                }
+                                            }}
+                                        >
+
+                                            {!isCurrentUser && (
+                                                <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 0.5 }}>
+                                                    {msg.user}
+                                                </Typography>
+                                            )}
+                                            {msg.text && <Typography variant="body1">{msg.text}</Typography>}
+                                            {msg.image && (
+                                                <img
+                                                    src={msg.image}
+                                                    alt="Uploaded content"
+                                                    style={{
+                                                        maxWidth: '100%',
+                                                        maxHeight: '40vh',
+                                                        borderRadius: '12px',
+                                                        marginTop: msg.text ? '8px' : 0,
+                                                        cursor: 'pointer'
+                                                    }}
+                                                    onClick={() => handleImageClick(msg.image)}
+                                                />
+                                            )}
+
+                                                <IconButton
+                                                    sx={{
+                                                        position: 'absolute',
+                                                        top: 4,
+                                                        right: 4,
+                                                        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                                                        color: '#fff',
+                                                        opacity: 0,  
+                                                        transition: 'opacity 0.2s ease-in-out',
+                                                        '&:hover': { backgroundColor: 'rgba(0, 0, 0, 0.7)' }
+                                                    }}
+                                                    onClick={() => handleDeleteMessage(msg.id)}
+                                                    className="delete-button"
+                                                >
+                                                    <DeleteIcon />
+                                                </IconButton>
+                                        </MessageBubble>
+                                    </StyledMessage>
+                                );
+                            })}
                         </List>
 
                         <Box sx={{

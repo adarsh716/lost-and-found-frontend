@@ -29,7 +29,7 @@ exports.createCommunityMessage = async (req, res) => {
 // 2. Get all community messages
 exports.getCommunityMessages = async (req, res) => {
   try {
-    const messages = await Message.find().sort({ createdAt: -1 }); // Fetch messages, most recent first
+    const messages = await Message.find().sort({ createdAt: 1 }); // Fetch messages, most recent first
     res.status(200).json(messages);
   } catch (error) {
     res.status(500).json({ message: 'Error fetching messages', error });

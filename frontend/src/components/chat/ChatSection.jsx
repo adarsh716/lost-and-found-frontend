@@ -42,6 +42,10 @@ const CommunityChat = () => {
         };
     }, []);
 
+    useEffect(() => {
+        scrollToBottom();
+      }, [messages]);
+
     const initializeChat = async () => {
         try {
             socketServices.connect();
@@ -60,7 +64,6 @@ const CommunityChat = () => {
 
     const handleNewMessage = (newMessage) => {
         setMessages(prev => [...prev, newMessage]);
-        scrollToBottom();
     };
 
     const scrollToBottom = () => {
@@ -84,8 +87,6 @@ const CommunityChat = () => {
             setMessages(prev => [...prev, sentMessage]);
 
             setMessage('');
-
-            scrollToBottom();
         } catch (err) {
             console.error('Error sending message:', err);
             setError('Failed to send message');
@@ -235,7 +236,7 @@ const CommunityChat = () => {
                 {filteredMessages.map((msg) => (
                     <StyledMessage
                         key={msg._id || msg.id}
-                        iscurrentuser={msg.userId === user.userId ? 1 : 0} 
+                        iscurrentuser={msg.userId === user.userId ? 1 : 0}
                     >
                         <MessageBubble
                             iscurrentuser={msg.userId === user.userId ? 1 : 0}
@@ -278,6 +279,8 @@ const CommunityChat = () => {
                         </MessageBubble>
                     </StyledMessage>
                 ))}
+
+                <div ref={messagesEndRef} />
             </List>
 
             <Backdrop
