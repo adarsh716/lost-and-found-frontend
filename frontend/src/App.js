@@ -50,7 +50,7 @@ const App = () => {
           <Route path="/change-username" element={<ChangeUsernamePage />} />
           <Route path="/blocked-accounts" element={<BlockedAccountsPage />} />
           <Route path="/contact-us" element={<OTPPage />} />
-          <Route path="/user-profile" element={<UserProfilePage />} />
+          <Route path="/user-profile/:userId" element={<UserProfilePage />} />
           <Route path="/private-chat" element={<PrivateChat />} />
           <Route path="/profile" element={<CommunityProfile />} />
           <Route path="/requests" element={<MessageRequestsPage />} />

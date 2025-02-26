@@ -17,11 +17,13 @@ import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import ForumIcon from '@mui/icons-material/Forum';
 import { styled } from '@mui/material/styles';
 import CloseIcon from '@mui/icons-material/Close';
+import { useNavigate } from 'react-router-dom';
 import socketServices from '../../services/socketServices';
 import { getCommunityMessages, sendCommunityMessage } from '../../api/auth';
 import { useAuth } from '../../context/AuthContext'
 
 const CommunityChat = () => {
+    const navigate = useNavigate();
     const [message, setMessage] = useState('');
     const [searchQuery, setSearchQuery] = useState('');
     const [messages, setMessages] = useState([]);
@@ -143,6 +145,10 @@ const CommunityChat = () => {
         setSelectedImage(null);
     }
 
+    const handleNavigateRoute = (userId) => {
+        navigate(`/user-profile/${userId}`);
+    };
+
     const StyledMessage = styled(ListItem)(({ theme, iscurrentuser }) => ({
         flexDirection: iscurrentuser ? 'row-reverse' : 'row',
         alignItems: 'flex-start',
@@ -237,13 +243,14 @@ const CommunityChat = () => {
                     <StyledMessage
                         key={msg._id || msg.id}
                         iscurrentuser={msg.userId === user.userId ? 1 : 0}
+                        onClick={() => handleNavigateRoute(msg.userId)}
                     >
                         <MessageBubble
                             iscurrentuser={msg.userId === user.userId ? 1 : 0}
                         >
 
                             {msg.userId !== currentUser._id && (
-                                <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 0.5 }}>
+                                <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 0.5 }} onClick={() => handleNavigateRoute(msg.userId)}>
                                     {msg.username}
                                 </Typography>
                             )}
